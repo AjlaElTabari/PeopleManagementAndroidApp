@@ -3,4 +3,6 @@
     <string name="mainTitle">Add a person below</string>
     <string name="btnAdd">Add</string>
     <string name="btnDelete">Del</string>
+    <string name="rbtnSortByName">Sort by name</string>
+    <string name="rbtnSortBySurname">Sort by surname</string>
 </resources>

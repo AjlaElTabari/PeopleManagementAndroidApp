@@ -10,17 +10,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-
+    private static final Integer SORT_BY_NAME = 0;
+    private static final Integer SORT_BY_SURNAME = 1;
     private static List<PersonModel> persons = new ArrayList<>();
 
     private EditText fieldName;
@@ -32,6 +36,9 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private PersonAdapter adapter;
 
+    private RadioButton rbtnSortByName;
+    private RadioButton rbtnSortBySurname;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,30 +49,55 @@ public class MainActivity extends AppCompatActivity {
         addButton = (Button) findViewById(R.id.btnAdd);
         recyclerView = (RecyclerView) findViewById(R.id.persons);
 
-        addButton.setOnClickListener(new Click());
+        rbtnSortByName = (RadioButton) findViewById(R.id.rbtnSortByName);
+        rbtnSortByName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                
+                compareAndSort(SORT_BY_NAME);
+
+                rbtnSortBySurname.setChecked(false);
+                updateList();
+            }
+        });
+
+        rbtnSortBySurname = (RadioButton) findViewById(R.id.rbtnSortBySurname);
+        rbtnSortBySurname.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                compareAndSort(SORT_BY_SURNAME);
+
+                rbtnSortByName.setChecked(false);
+                updateList();
+            }
+        });
+
+
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Editable name = fieldName.getText();
+                Editable surname = fieldSurname.getText();
+
+                PersonModel person = new PersonModel(name, surname);
+
+                persons.add(0, person);
+
+                adapter.notifyDataSetChanged();
+
+                fieldName.setText("");
+                fieldSurname.setText("");
+
+
+                fieldName.requestFocus();
+            }
+        });
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         adapter = new PersonAdapter();
         recyclerView.setAdapter(adapter);
-    }
-
-    private class Click implements View.OnClickListener {
-
-        @Override
-        public void onClick(View v) {
-            Editable name = fieldName.getText();
-            Editable surname = fieldSurname.getText();
-
-            PersonModel person = new PersonModel(name, surname);
-
-            persons.add(0, person);
-
-            adapter.notifyDataSetChanged();
-
-            fieldName.setText("");
-            fieldSurname.setText("");
-        }
     }
 
     private class PersonHolder extends RecyclerView.ViewHolder {
@@ -134,9 +166,21 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
     public void updateList() {
         adapter = new PersonAdapter();
         recyclerView.setAdapter(adapter);
+    }
+
+    private void compareAndSort(final Integer sortBy) {
+        Collections.sort(persons, new Comparator<PersonModel>() {
+            @Override
+            public int compare(PersonModel person1, PersonModel person2) {
+                if (sortBy == SORT_BY_NAME) {
+                    return person1.getPersonsName().compareToIgnoreCase(person2.getPersonsName());
+                } else {
+                    return person1.getPersonsSurname().compareToIgnoreCase(person2.getPersonsSurname());
+                }
+            }
+        });
     }
 }
