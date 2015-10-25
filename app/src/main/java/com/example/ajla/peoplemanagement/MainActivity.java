@@ -1,5 +1,6 @@
 package com.example.ajla.peoplemanagement;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -25,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final Integer SORT_BY_NAME = 0;
     private static final Integer SORT_BY_SURNAME = 1;
+    public static final String EDIT = "edit";
     private static List<PersonModel> persons = new ArrayList<>();
 
     private EditText fieldName;
@@ -45,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         fieldName = (EditText) findViewById(R.id.name);
-        fieldSurname = (EditText) findViewById(R.id.surname);
+                fieldSurname = (EditText) findViewById(R.id.surname);
         addButton = (Button) findViewById(R.id.btnAdd);
         recyclerView = (RecyclerView) findViewById(R.id.persons);
 
@@ -53,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
         rbtnSortByName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                
+
                 compareAndSort(SORT_BY_NAME);
 
                 rbtnSortBySurname.setChecked(false);
@@ -116,6 +118,17 @@ public class MainActivity extends AppCompatActivity {
 
             idView = (TextView) itemView.findViewById(R.id.personId);
             nameView = (TextView) itemView.findViewById(R.id.personName);
+            nameView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent i = new Intent(getApplicationContext(), Edit.class);
+                    Bundle personToEdit = new Bundle();
+                    personToEdit.putSerializable(EDIT, person);
+                    i.putExtras(personToEdit);
+                    startActivity(i);
+                }
+            });
+
             surnameView = (TextView) itemView.findViewById(R.id.personSurname);
             timestampView = (TextView) itemView.findViewById(R.id.personTimestamp);
             btnDeletePerson = (Button) itemView.findViewById(R.id.btnDeletePerson);

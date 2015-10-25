@@ -30,12 +30,14 @@
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/name" />
+                android:id="@+id/name"
+                android:hint="@string/hintName"/>
 
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/surname" />
+                android:id="@+id/surname"
+                android:hint="@string/hintSurname"/>
 
             <Button
                 android:layout_width="wrap_content"

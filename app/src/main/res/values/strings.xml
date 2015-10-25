@@ -5,4 +5,8 @@
     <string name="btnDelete">Del</string>
     <string name="rbtnSortByName">Sort by name</string>
     <string name="rbtnSortBySurname">Sort by surname</string>
+    <string name="editTitle">Edit a person info</string>
+    <string name="hintName">Name</string>
+    <string name="hintSurname">Surname</string>
+    <string name="btnSave">Save</string>
 </resources>
