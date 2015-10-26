@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
     private static final Integer SORT_BY_NAME = 0;
     private static final Integer SORT_BY_SURNAME = 1;
     public static final String EDIT = "edit";
-    private static List<PersonModel> persons = new ArrayList<>();
+    private static PersonList persons = new PersonList();
 
     private EditText fieldName;
     private EditText fieldSurname;
@@ -79,20 +79,23 @@ public class MainActivity extends AppCompatActivity {
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Editable name = fieldName.getText();
-                Editable surname = fieldSurname.getText();
+                String name = fieldName.getText().toString();
+                String surname = fieldSurname.getText().toString();
 
-                PersonModel person = new PersonModel(name, surname);
+                if(name.equals("") || surname.equals("")) {
+                    Toast.makeText(MainActivity.this, "All fields are required!", Toast.LENGTH_SHORT).show();
+                } else {
+                    persons.addPerson(name, surname);
+                    adapter.notifyDataSetChanged();
 
-                persons.add(0, person);
-
-                adapter.notifyDataSetChanged();
-
-                fieldName.setText("");
-                fieldSurname.setText("");
+                    fieldName.setText("");
+                    fieldSurname.setText("");
 
 
-                fieldName.requestFocus();
+                    fieldName.requestFocus();
+                }
+
+
             }
         });
 
@@ -137,12 +140,8 @@ public class MainActivity extends AppCompatActivity {
 
                 @Override
                 public void onClick(View v) {
-                    for (int i = 0; i < persons.size(); i++) {
-                        String id = idView.getText().toString();
-                        if (persons.get(i).getPersonsId().equals(id)) {
-                            persons.remove(i);
-                        }
-                    }
+                    String id = idView.getText().toString();
+                    PersonList.deletePerson(id);
                     updateList();
                 }
             });
@@ -163,7 +162,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(PersonHolder holder, int position) {
 
-            PersonModel person = persons.get(position);
+            PersonModel person = persons.getPerson(position);
 
             holder.idView.setText(person.getPersonsId());
             holder.nameView.setText(person.getPersonsName());
@@ -175,7 +174,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public int getItemCount() {
-            return persons.size();
+            return persons.getSize();
         }
     }
 
@@ -185,7 +184,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void compareAndSort(final Integer sortBy) {
-        Collections.sort(persons, new Comparator<PersonModel>() {
+        Collections.sort((List<PersonModel>) persons, new Comparator<PersonModel>() {
             @Override
             public int compare(PersonModel person1, PersonModel person2) {
                 if (sortBy == SORT_BY_NAME) {

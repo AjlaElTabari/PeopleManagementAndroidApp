@@ -42,8 +42,7 @@ public class Edit extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                person.setName(editName.getText().toString());
-                person.setSurname(editSurname.getText().toString());
+                PersonList.updatePerson(id, editName.getText().toString(), editSurname.getText().toString());
 
                 Intent i = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(i);
